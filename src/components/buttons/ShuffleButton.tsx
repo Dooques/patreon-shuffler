@@ -1,17 +1,20 @@
-import { ShuffleProps, PostInfo } from "../../types/ContentTypes"
+import { ShuffleProps } from "../../types/ContentTypes"
 
 export default function ShuffleButton({ posts, onShuffle }: ShuffleProps) {
-    const updatePost = (post: PostInfo) => onShuffle({...posts, post})
+
+    if (posts.postList.every((p) => p.played)) {
+        posts.postList.map((p) => p.played = false);
+    }
 
     const handleShuffle = () => {
-        let post = posts.post;
-        while (!post.played)
+        let newPost = posts.post;
+        while (!newPost.played)
         {
             const randomIndex = Math.random() * posts.postList.length;
-            post = posts.postList[randomIndex];
+            newPost = posts.postList[randomIndex];
         }
-        post.played = true;
-        updatePost(post)
+        newPost.played = true;
+        onShuffle({...posts, post: newPost});
     }
 
     return (
