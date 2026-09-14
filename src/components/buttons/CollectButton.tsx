@@ -1,13 +1,13 @@
 import { 
     ContentStatus, GetPostsRequest, GetPostsResponse, StatusProps
-} from "../../content/Content.types";
-import { PostInfo } from "../lists/VideoList.types";
+} from "../../types/ContentTypes";
+import { PostInfo } from "../../types/VideoList.types";
 
-export default function CollectButton({ states: state, onChange }: StatusProps) {
+export default function CollectButton({ states: states, onChange }: StatusProps) {
 
-    const handleStatusChange = (status: ContentStatus) => onChange({...state, status});
-    const handlePostChange = (posts: PostInfo[]) => onChange({...state, posts});
-    const handleError = (error: Error) => onChange({...state, error})
+    const handleStatusChange = (status: ContentStatus) => onChange({...states, status});
+    const handlePostChange = (posts: PostInfo[]) => onChange({...states, posts});
+    const handleError = (error: Error) => onChange({...states, error})
 
     const handleExtraction = async () => {
         handleStatusChange('loading');
@@ -28,7 +28,7 @@ export default function CollectButton({ states: state, onChange }: StatusProps) 
     return (
         <>
             { 
-            state.status === 'loading' ? 
+            states.status === 'loading' ? 
                 <p>Getting playlist content...</p> : 
                 <button onClick={handleExtraction}>Collect Playlist</button>
             }

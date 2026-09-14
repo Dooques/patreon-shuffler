@@ -1,4 +1,4 @@
-import { FilterFormProps } from './FilterForm.types';
+import { FilterFormProps } from '../../types/FilterTypes';
 
 
 export default function FilterForm({values, onChange }: FilterFormProps) {

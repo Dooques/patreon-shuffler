@@ -1,18 +1,18 @@
 import './App.scss';
 import FilterForm from './components/forms/FilterForm';
 import { useState } from 'react';
-import { FilterValues } from './components/forms/FilterForm.types';
-import { PostInfo } from './components/lists/VideoList.types.ts';
+import { FilterValues } from './types/FilterTypes.ts';
 import VideoList from './components/lists/VideoList';
-import { GetPostsResponse, GetPostsRequest, ContentStatus, StateValues } from './content/Content.types.ts';
-import CollectButton from './components/buttons/Collect.tsx';
+import { StateValues } from './types/ContentTypes.ts';
+import CollectButton from './components/buttons/CollectButton.tsx';
 
 const STORAGE_KEY = 'filters';
 const DEFAULT_FILTERS: FilterValues = { mediaType: 'video', collectionId: "" }
+const DEFAULT_STATES: StateValues = { status: 'done', posts: [], error: new Error()}
 
 function App() {
   const [filters, setFilters] = useState<FilterValues>(DEFAULT_FILTERS);
-  const [states, setStates] = useState<StateValues>();
+  const [states, setStates] = useState<StateValues>(DEFAULT_STATES);
 
   useState(() => {
     chrome.storage.local.get(STORAGE_KEY, (result) => {
@@ -41,7 +41,7 @@ function App() {
           states={states}
           onChange={setStates}/>
 
-        { error.length > 0 ? <p>{error}</p> : <></> }
+        { states?.error.message.length > 0 ? <p>{states.error.message}</p> : <></> }
         
         <p>
           <span>When you click collect, a new tab will open and collect all the videos for the collection you entered.</span>
@@ -50,7 +50,14 @@ function App() {
 
         <button>Shuffle</button>
         
-        { posts.length <= 0 ? <></> : <VideoList postList={ posts }></VideoList> }
+        { 
+          states.posts.length <= 0 ? 
+          <></> : 
+          <VideoList 
+            postList={ 
+              states.posts.filter((p) => p.mediaType === filters.mediaType)
+            }/> 
+        }
       </div>
     </>
   )

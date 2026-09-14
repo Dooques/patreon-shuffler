@@ -1,4 +1,4 @@
-import type { PostInfo } from "../components/lists/VideoList.types";
+import { MediaType } from "./FilterTypes";
 
 export type ContentStatus = 'loading' | 'done' | 'error'
 
@@ -19,4 +19,19 @@ export interface GetPostsRequest {
 
 export interface GetPostsResponse {
     posts: PostInfo[];
+}
+
+export interface PostInfo {
+    videoId: string;
+    url: string;
+    title: string;
+    mediaType: MediaType;
+}
+
+export interface PostList {
+    posts: PostInfo[];
+}
+
+export interface PostListProps {
+    postList: PostInfo[];
 }
