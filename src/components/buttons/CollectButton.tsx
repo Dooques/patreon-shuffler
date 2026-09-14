@@ -1,7 +1,6 @@
 import { 
     GetPostsRequest, GetPostsResponse, StatusProps
 } from "../../types/ContentTypes";
-import { PostInfo } from "../../types/VideoList.types";
 
 export default function CollectButton({ states: states, onChange }: StatusProps) {
 

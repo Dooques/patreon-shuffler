@@ -3,16 +3,26 @@ import FilterForm from './components/forms/FilterForm';
 import { useState } from 'react';
 import { FilterValues } from './types/FilterTypes.ts';
 import VideoList from './components/lists/VideoList';
-import { StateValues } from './types/ContentTypes.ts';
+import { PostValues, StateValues, PostInfo } from './types/ContentTypes.ts';
 import CollectButton from './components/buttons/CollectButton.tsx';
+import ShuffleButton from './components/buttons/ShuffleButton.tsx';
 
 const STORAGE_KEY = 'filters';
 const DEFAULT_FILTERS: FilterValues = { mediaType: 'video', collectionId: "" }
 const DEFAULT_STATES: StateValues = { status: 'done', posts: [], error: new Error()}
+const DEFAULT_POST: PostInfo = {
+  videoId: '',
+  url: '',
+  title: '',
+  mediaType: 'unknown',
+  played: false
+}
+const DEFAULT_POSTS: PostValues = { post: DEFAULT_POST, postList: [] }
 
 function App() {
   const [filters, setFilters] = useState<FilterValues>(DEFAULT_FILTERS);
   const [states, setStates] = useState<StateValues>(DEFAULT_STATES);
+  const [posts, setPosts] = useState<PostValues>(DEFAULT_POSTS);
 
   useState(() => {
     chrome.storage.local.get(STORAGE_KEY, (result) => {
@@ -33,8 +43,7 @@ function App() {
       <h1>Patreon Shuffler</h1>
         <FilterForm
           values={ filters }
-          onChange={ handleFilterChanges }
-        />
+          onChange={ handleFilterChanges }/>
         <br/>
 
         <CollectButton 
@@ -57,10 +66,8 @@ function App() {
         { 
           states.posts.length <= 0 ? 
           <></> : 
-          <VideoList 
-            postList={ 
-              states.posts.filter((p) => p.mediaType === filters.mediaType)
-            }/> 
+          <VideoList postList={ 
+            states.posts.filter((p) => p.mediaType === filters.mediaType)}/> 
         }
       </div>
     </>

@@ -1,6 +1,5 @@
 import { MediaType } from "../types/FilterTypes";
-import { PostInfo } from "../types/VideoList.types";
-import { GetPostsRequest, GetPostsResponse } from "../types/ContentTypes";
+import { GetPostsRequest, GetPostsResponse, PostInfo } from "../types/ContentTypes";
 
 function getMediaType(el: HTMLAnchorElement): MediaType {
     if (el.querySelector('svg[data-tag="IconVideoCamera"]')) return 'video';
@@ -23,7 +22,8 @@ export function extractContent(): PostInfo[] {
                 videoId,
                 url: element.href.split('?')[0],
                 title: element.querySelector('h3')?.textContent?.trim() ?? '',
-                mediaType: getMediaType(element)
+                mediaType: getMediaType(element),
+                played: false
             });
         });
     
