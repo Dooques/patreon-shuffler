@@ -36,6 +36,7 @@ export interface PostInfo {
     url: string;
     title: string;
     mediaType: MediaType;
+    played: boolean;
 }
 
 export interface PostList {
