@@ -48,7 +48,11 @@ function App() {
           <span> Once this process has finished, you can use the shuffle button to load a random video.</span>
         </p>
 
-        <button>Shuffle</button>
+        <ShuffleButton
+          posts={posts}
+          onShuffle={setPosts}/>
+
+          <h2>{posts.post.title}</h2>
         
         { 
           states.posts.length <= 0 ? 

@@ -8,9 +8,19 @@ export interface StateValues {
     error: Error;
 }
 
+export interface PostValues {
+    post: PostInfo;
+    postList: PostInfo[];
+}
+
 export interface StatusProps {
     states: StateValues;
     onChange: (state: StateValues) => void;
+}
+
+export interface ShuffleProps {
+    posts: PostValues;
+    onShuffle: (posts: PostValues) => void;
 }
 
 export interface GetPostsRequest {

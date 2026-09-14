@@ -1,6 +1,6 @@
 import './VideoList.scss'
 import { useState } from "react"
-import { PostInfo, PostListProps } from "./VideoList.types";
+import { PostInfo, PostListProps } from "../../types/ContentTypes";
 
 export default function({postList}: PostListProps) {
     const [listState, setListState] = useState(false);
