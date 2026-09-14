@@ -1,33 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.scss';
+import FilterForm from './components/forms/FilterForm';
+import { useState } from 'react';
+import { FilterValues } from './components/forms/FilterForm.types';
+import { PostInfo } from './components/lists/VideoList.types.ts';
+import VideoList from './components/lists/VideoList';
+import { GetPostsResponse, GetPostsRequest, ContentStatus, StateValues } from './content/Content.types.ts';
+import CollectButton from './components/buttons/Collect.tsx';
+
+const STORAGE_KEY = 'filters';
+const DEFAULT_FILTERS: FilterValues = { mediaType: 'video', collectionId: "" }
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [filters, setFilters] = useState<FilterValues>(DEFAULT_FILTERS);
+  const [states, setStates] = useState<StateValues>();
+
+  useState(() => {
+    chrome.storage.local.get(STORAGE_KEY, (result) => {
+      if (result[STORAGE_KEY]) {
+        setFilters(result[STORAGE_KEY] as FilterValues)
+      }});
+  });
+
+  const handleFilterChanges = ((values: FilterValues) => {
+    setFilters(values);
+    chrome.storage.local.set({ [STORAGE_KEY]: values });
+  });
+
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
+      <h1>Patreon Shuffler</h1>
+        <FilterForm
+          values={ filters }
+          onChange={ handleFilterChanges }
+        />
+        <br/>
+
+        <CollectButton 
+          states={states}
+          onChange={setStates}/>
+
+        { error.length > 0 ? <p>{error}</p> : <></> }
+        
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+          <span>When you click collect, a new tab will open and collect all the videos for the collection you entered.</span>
+          <span> Once this process has finished, you can use the shuffle button to load a random video.</span>
         </p>
+
+        <button>Shuffle</button>
+        
+        { posts.length <= 0 ? <></> : <VideoList postList={ posts }></VideoList> }
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }

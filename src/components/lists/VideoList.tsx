@@ -1,0 +1,33 @@
+import './VideoList.scss'
+import { useState } from "react"
+import { PostInfo, PostListProps } from "./VideoList.types";
+
+export default function({postList}: PostListProps) {
+    const [listState, setListState] = useState(false);
+
+    const handleListState = () => {
+        setListState(!listState)
+    };
+
+    return (
+        <>
+            <div>
+                <ul>
+                    <li>
+                        Playlist Count: {postList.length}
+                    </li>
+                    <li>
+                        <button onClick={ handleListState }>
+                            Show Playlist
+                        </button>
+                    </li>
+                    {listState ? postList.map((post: PostInfo) =>
+                        <li>
+                            <p>{post.title}</p>
+                        </li>
+                        ) : <li><p>Posts available...</p></li>}
+                </ul>
+            </div>
+        </>
+    )
+}

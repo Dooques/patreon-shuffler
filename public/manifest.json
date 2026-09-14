@@ -1,13 +1,19 @@
 {
     "manifest_version": 3,
-    "name": "React Chrome Extension",
+    "name": "Patreon Shuffler",
     "version": "1.0.0",
-    "description": "A simple React app as a Chrome extension",
+    "description": "Give your favourite patreon collections new life with this shuffler.",
     "action": {
       "default_popup": "index.html"
     },
     "background": {
       "service_worker": "background.js"
     },
-    "permissions": []
+    "permissions": ["storage", "activeTab", "scripting"],
+    "content_scripts": [
+      {
+        "matches": ["https://www.patreon.com/*"],
+        "js": ["content.js"]
+      }
+    ]
   }
