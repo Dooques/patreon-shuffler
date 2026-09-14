@@ -1,9 +1,9 @@
 import './App.scss';
 import FilterForm from './components/forms/FilterForm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FilterValues } from './types/FilterTypes.ts';
 import VideoList from './components/lists/VideoList';
-import { PostValues, StateValues, PostInfo } from './types/ContentTypes.ts';
+import { StateValues, PostInfo, PostValues } from './types/ContentTypes.ts';
 import CollectButton from './components/buttons/CollectButton.tsx';
 import ShuffleButton from './components/buttons/ShuffleButton.tsx';
 
@@ -11,13 +11,10 @@ const STORAGE_KEY = 'filters';
 const DEFAULT_FILTERS: FilterValues = { mediaType: 'video', collectionId: "" }
 const DEFAULT_STATES: StateValues = { status: 'done', posts: [], error: new Error()}
 const DEFAULT_POST: PostInfo = {
-  videoId: '',
-  url: '',
-  title: '',
-  mediaType: 'unknown',
-  played: false
+  videoId: '', url: '', title: 'Nothing found yet...', mediaType: 'unknown', 
+  played: true
 }
-const DEFAULT_POSTS: PostValues = { post: DEFAULT_POST, postList: [] }
+const DEFAULT_POSTS: PostValues = { post: DEFAULT_POST }
 
 function App() {
   const [filters, setFilters] = useState<FilterValues>(DEFAULT_FILTERS);
@@ -25,6 +22,7 @@ function App() {
   const [posts, setPosts] = useState<PostValues>(DEFAULT_POSTS);
 
   useState(() => {
+    console.log("extesnion started, getting data from chrome storage")
     chrome.storage.local.get(STORAGE_KEY, (result) => {
       if (result[STORAGE_KEY]) {
         setFilters(result[STORAGE_KEY] as FilterValues)
@@ -32,10 +30,15 @@ function App() {
   });
 
   const handleFilterChanges = ((values: FilterValues) => {
+    console.log("updating filters")
     setFilters(values);
     chrome.storage.local.set({ [STORAGE_KEY]: values });
   });
 
+  useEffect(() => {
+    const filteredPosts = states.posts.filter((p) => p.mediaType == filters.mediaType);
+    setStates({...states, posts: filteredPosts});
+  }, [states.posts]);
 
   return (
     <>
@@ -58,10 +61,12 @@ function App() {
         </p>
 
         <ShuffleButton
-          posts={posts}
+          post={posts}
+          states={states}
+          onChange={setStates}
           onShuffle={setPosts}/>
 
-          <h2>{posts.post.title}</h2>
+        <a href={posts.post.url}><h2>{posts.post.title}</h2></a>
         
         { 
           states.posts.length <= 0 ? 

@@ -10,7 +10,6 @@ export interface StateValues {
 
 export interface PostValues {
     post: PostInfo;
-    postList: PostInfo[];
 }
 
 export interface StatusProps {
@@ -19,7 +18,9 @@ export interface StatusProps {
 }
 
 export interface ShuffleProps {
-    posts: PostValues;
+    post: PostValues;
+    states: StateValues;
+    onChange: (states: StateValues) => void;
     onShuffle: (posts: PostValues) => void;
 }
 
