@@ -4,24 +4,24 @@ export type ContentStatus = 'loading' | 'done' | 'error'
 
 export interface StateValues {
     status: ContentStatus;
-    posts: PostInfo[];
     error: Error;
 }
 
-export interface PostValues {
-    post: PostInfo;
-}
 
-export interface StatusProps {
+export interface CollectionProps {
     states: StateValues;
-    onChange: (state: StateValues) => void;
+    posts: PostInfo[];
+    onCollection: (posts: PostInfo[]) => void;
+    onStateChange: (state: StateValues) => void;
 }
 
 export interface ShuffleProps {
-    post: PostValues;
-    states: StateValues;
-    onChange: (states: StateValues) => void;
-    onShuffle: (posts: PostValues) => void;
+    post: PostInfo;
+    posts: PostInfo[];
+    state: StateValues;
+    onStateChange: (states: StateValues) => void;
+    updatePostList: (posts: PostInfo[]) => void;
+    onShuffle: (post: PostInfo) => void;
 }
 
 export interface GetPostsRequest {
@@ -45,5 +45,10 @@ export interface PostList {
 }
 
 export interface PostListProps {
+    postList: PostInfo[];
+}
+
+export interface PersistedState {
+    mediaFilter: MediaType;
     postList: PostInfo[];
 }

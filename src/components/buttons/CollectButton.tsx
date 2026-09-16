@@ -1,11 +1,11 @@
-import { 
-    GetPostsRequest, GetPostsResponse, StatusProps
+import {
+    GetPostsRequest, GetPostsResponse, CollectionProps 
 } from "../../types/ContentTypes";
 
-export default function CollectButton({ states: states, onChange }: StatusProps) {
+export default function CollectButton({ states, onStateChange, onCollection }: CollectionProps) {
 
     const handleCollection = async () => {
-        onChange({...states, status:'loading'})
+        onStateChange({...states, status:'loading'})
         try {
             const [tab] = await chrome.tabs.query({ active:true, currentWindow:true });
             if (!tab?.id) throw new Error('No active tab found');
@@ -13,10 +13,10 @@ export default function CollectButton({ states: states, onChange }: StatusProps)
             const response = await chrome.tabs.sendMessage<GetPostsRequest, GetPostsResponse>(
                 tab.id,
                 {type: 'GET_POSTS'});
-            
-            onChange({...states, posts: response.posts, status: 'done'});
+            onStateChange({...states, status: 'done'});
+            onCollection(response.posts);
         } catch (e) {
-            onChange({...states, status: 'error', error: e instanceof Error ? 
+            onStateChange({...states, status: 'error', error: e instanceof Error ? 
                 e : new Error('Something went wrong')});
         }};
 

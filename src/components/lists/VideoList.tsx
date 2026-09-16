@@ -18,14 +18,14 @@ export default function({postList}: PostListProps) {
                     </li>
                     <li>
                         <button onClick={ handleListState }>
-                            Show Playlist
+                            {listState ? "Hide Playlist" : "Show Playlist"}
                         </button>
                     </li>
                     {listState ? postList.map((post: PostInfo) =>
                         <li>
                             <p>{post.title}</p>
                         </li>
-                        ) : <li><p>Posts available...</p></li>}
+                        ) : <></>}
                 </ul>
             </div>
         </>
