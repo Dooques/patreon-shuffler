@@ -19,10 +19,14 @@ const DEFAULT_POSTS: PostValues = { post: DEFAULT_POST }
 function App() {
   const [filters, setFilters] = useState<FilterValues>(DEFAULT_FILTERS);
   const [states, setStates] = useState<StateValues>(DEFAULT_STATES);
-  const [posts, setPosts] = useState<PostValues>(DEFAULT_POSTS);
-
-  useState(() => {
-    console.log("extesnion started, getting data from chrome storage")
+  const [persistedState, setPersistedState] = useState<PersistedState>(DEFAULT_STATE);
+  const [collectedPosts, setCollectedPosts] = useState<PostInfo[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<PostInfo[]>([]);
+  const [shuffledPost, setShuffledPost] = useState(DEFAULT_POST);
+  const [hasLoaded, setHasLoaded] = useState(false);
+  
+  useEffect(() => {
+    console.log("extension started, getting data from chrome storage")
     chrome.storage.local.get(STORAGE_KEY, (result) => {
       if (result[STORAGE_KEY]) {
         setFilters(result[STORAGE_KEY] as FilterValues)
