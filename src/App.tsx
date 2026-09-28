@@ -88,11 +88,9 @@ function App() {
 
         <a href={shuffledPost.url}><h2>{shuffledPost.title}</h2></a>
         
-        { 
-          persistedState.postList.length <= 0 ? 
+        { persistedState.postList.length <= 0 ? 
           <></> : 
-          <VideoList postList={persistedState.postList}/>
-        }
+          <VideoList postList={persistedState.postList}/> }
       </div>
     </>
   )
