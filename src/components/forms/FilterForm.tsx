@@ -29,16 +29,6 @@ export default function FilterForm({values, onChange }: FilterFormProps) {
                         />Audio
                     </label>
                 </div>
-
-                <p>Collection ID</p>
-                <p>(the number found in the collection page URL)</p>
-                
-                <input
-                    type="text"
-                    name="collectionId"
-                    value={ values.collectionId }
-                    onChange={ () => onChange({...values}) }
-                /> 
             </div>
         </form>
         </>

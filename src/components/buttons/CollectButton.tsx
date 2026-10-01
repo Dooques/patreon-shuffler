@@ -10,9 +10,10 @@ export default function CollectButton({ states, onStateChange, onCollection }: C
             const [tab] = await chrome.tabs.query({ active:true, currentWindow:true });
             if (!tab?.id) throw new Error('No active tab found');
             
-            const response = await chrome.tabs.sendMessage<GetPostsRequest, GetPostsResponse>(
-                tab.id,
-                {type: 'GET_POSTS'});
+            const response = 
+                await chrome.tabs.sendMessage<GetPostsRequest, GetPostsResponse>(
+                    tab.id, 
+                    {type: 'GET_POSTS'});
             onStateChange({...states, status: 'done'});
             onCollection(response.posts);
         } catch (e) {

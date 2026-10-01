@@ -17,11 +17,11 @@ function findLoadMoreButton(): HTMLElement | null {
     );
 }
 
-function waitForMorePosts(previousCount: number, timeoutMs = 8000, intervalMs = 200): Promise<void> {
+function waitForMorePosts(previousCount: number, timeoutMs = 4000, intervalMs = 200): Promise<void> {
     return new Promise((resolve) => {
         const start = Date.now();
         const check = () => {
-            if (extractContent().length > previousCount || Date.now() - start > timeoutMs) {
+            if (countPosts() > previousCount || Date.now() - start > timeoutMs) {
                 resolve();
                 return;
             }
@@ -32,18 +32,23 @@ function waitForMorePosts(previousCount: number, timeoutMs = 8000, intervalMs = 
 }
 
 async function loadAllPosts(): Promise<void> {
+    console.log("Loading all posts...")
     let loadMoreButton = findLoadMoreButton();
-    while (loadMoreButton) {
-        const previousCount = extractContent().length;
+    console.log("Load button found, looping to end")
+    while (loadMoreButton !== null) {
+        const previousCount = countPosts();
+        console.log(`loaded ${previousCount} posts...`)
         loadMoreButton.click();
         await waitForMorePosts(previousCount);
         loadMoreButton = findLoadMoreButton();
     }
+    console.log("Load more button not found, starting collection logic...");
 }
 
 export function extractContent(): PostInfo[] {
     const seen = new Set<string>();
     const posts: PostInfo[] = [];
+    console.log("Collecting loaded posts...")
 
     document.querySelectorAll<HTMLAnchorElement>('a[href*="/posts/"]')
         .forEach((element) => {
@@ -64,12 +69,27 @@ export function extractContent(): PostInfo[] {
     return posts;
 }
 
+function countPosts(): number {
+    let count = 0; 
+    
+    document.querySelectorAll<HTMLAnchorElement>('a[href*="/posts/"]')
+        .forEach((element) => {
+            if (element.href.match(/\/posts\/(\d+)/)) {
+                count++;
+            }
+        })
+    return count;
+}
+
 chrome.runtime.onMessage.addListener((
     message: GetPostsRequest,
     _sender,
     sendResponse: (response: GetPostsResponse) => void) => {
         if (message.type === 'GET_POSTS') {
-            loadAllPosts().then(() => sendResponse({ posts: extractContent() }));
+            console.log(`Received ${JSON.stringify(message)}`);
+            console.log("Loading posts...");
+            loadAllPosts().then(
+                () => sendResponse({ posts: extractContent() }));
             return true;
         }
     }

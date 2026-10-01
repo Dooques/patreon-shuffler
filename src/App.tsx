@@ -59,38 +59,45 @@ function App() {
   return (
     <>
       <div>
-      <h1>Patreon Shuffler</h1>
+        <h1>Patreon Shuffler</h1>
+        
+        <ShuffleButton
+          post={shuffledPost}
+          posts={persistedState.postList}
+          state={states}
+          onStateChange={setStates}
+          onShuffle={setShuffledPost}
+          updatePostList={setFilteredPosts}/>
+
+        <a href={shuffledPost.url}
+           onClick={(e) => {
+             e.preventDefault();
+             chrome.tabs.create({ url: shuffledPost.url });
+           }}>
+          <h2>{shuffledPost.title}</h2>
+        </a>
+        
         <FilterForm
           values={filters}
           onChange={handleFilterChanges}/>
+        
         <br/>
 
-        <CollectButton 
-          states={states}
-          posts={collectedPosts}
-          onCollection={setCollectedPosts}
-          onStateChange={setStates}/>
-
+        <CollectButton
+            states={states}
+            posts={collectedPosts}
+            onCollection={setCollectedPosts}
+            onStateChange={setStates}/>
+        
+        <p>When you click collect, the playlist will be loaded and added to local storage. </p>
+        <p>This may take a couple minutes depending on the length of the playlist. </p>
+        <p>Once this process has finished, you can use the shuffle button to load a random video.</p>
+        
         { states?.error.message.length > 0 ? <p>{states.error.message}</p> : <></> }
         
-        <p>
-          <span>When you click collect, a new tab will open and collect all the videos for the collection you entered.</span>
-          <span> Once this process has finished, you can use the shuffle button to load a random video.</span>
-        </p>
-
-        <ShuffleButton 
-            post={shuffledPost} 
-            posts={persistedState.postList}
-            state={states} 
-            onStateChange={setStates} 
-            onShuffle={setShuffledPost}
-            updatePostList={setFilteredPosts}/>
-
-        <a href={shuffledPost.url}><h2>{shuffledPost.title}</h2></a>
-        
         { persistedState.postList.length <= 0 ? 
-          <></> : 
-          <VideoList postList={persistedState.postList}/> }
+            <></> : 
+            <VideoList postList={persistedState.postList}/> }
       </div>
     </>
   )

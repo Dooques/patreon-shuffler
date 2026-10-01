@@ -16,6 +16,7 @@ export default function({postList}: PostListProps) {
                     <li>
                         Playlist Count: {postList.length}
                     </li>
+                    <br/>
                     <li>
                         <button onClick={ handleListState }>
                             {listState ? "Hide Playlist" : "Show Playlist"}
