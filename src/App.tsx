@@ -1,11 +1,13 @@
 import './App.scss';
-import FilterForm from './components/forms/FilterForm';
 import { useEffect, useState } from 'react';
 import { FilterValues } from './types/FilterTypes.ts';
 import VideoList from './components/lists/VideoList';
 import {StateValues, PostInfo, PersistedState} from './types/ContentTypes.ts';
 import CollectButton from './components/buttons/CollectButton.tsx';
 import ShuffleButton from './components/buttons/ShuffleButton.tsx';
+import {isExtension} from "./utils/isExtension.ts";
+import {Instructions} from "./components/instructions/instructions.tsx";
+import FilterForm from "./components/forms/FilterForm.tsx";
 
 const STORAGE_KEY = 'filters';
 const DEFAULT_FILTERS: FilterValues = { mediaType: 'video', collectionId: "" }
@@ -27,18 +29,17 @@ function App() {
   const [filteredPosts, setFilteredPosts] = useState<PostInfo[]>([]);
   const [shuffledPost, setShuffledPost] = useState(DEFAULT_POST);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
   
   useEffect(() => {
     console.log("extension started, getting data from chrome storage")
-    chrome.storage.local.get(STORAGE_KEY, (result) => {
-      if (result[STORAGE_KEY]) {setPersistedState(result[STORAGE_KEY] as PersistedState)}});
+    if (isExtension) {
+      chrome.storage.local.get(STORAGE_KEY, (result) => {
+        if (result[STORAGE_KEY]) { setPersistedState(result[STORAGE_KEY] as PersistedState) }});
+    }
     setHasLoaded(true);
   }, []);
 
-  const handleFilterChanges = ((filters: FilterValues) => {
-    console.log("updating filters")
-    setFilters(filters);
-  });
 
   useEffect(() => {
     if (!hasLoaded) return;
@@ -55,19 +56,59 @@ function App() {
     setPersistedState(newState);
     chrome.storage.local.set({[STORAGE_KEY]: newState});
   }, [filteredPosts]);
+
+  const handleFilterChanges = ((values: FilterValues) => {
+    console.log("updating filters")
+    setFilters(values);
+  });
   
   return (
     <>
       <div>
         <h1>Patreon Shuffler</h1>
-        
-        <ShuffleButton
-          post={shuffledPost}
-          posts={persistedState.postList}
-          state={states}
-          onStateChange={setStates}
-          onShuffle={setShuffledPost}
-          updatePostList={setFilteredPosts}/>
+
+        <FilterForm
+            values={filters}
+            onChange={handleFilterChanges}
+        />
+        <div>
+          { showInstructions ? 
+              <div>
+                <Instructions/>
+                <a className={"instructionButton"} 
+                   href={"#"}
+                   onClick={(e) => {
+                     e.preventDefault()
+                     setShowInstructions(!showInstructions)}
+                }>Hide Instructions</a>
+              </div> :
+              <div>
+                <a className={"instructionButton"} 
+                   href={"#"} 
+                   onClick={(e) => {
+                     e.preventDefault()
+                     setShowInstructions(!showInstructions)}
+                }>Show Instructions</a> 
+              </div>
+          }
+        </div>
+
+        <div className={"buttonContainer"}>
+          <CollectButton
+              states={states}
+              posts={collectedPosts}
+              onCollection={setCollectedPosts}
+              onStateChange={setStates}
+          />
+
+          <ShuffleButton
+              post={shuffledPost}
+              posts={persistedState.postList}
+              state={states}
+              onStateChange={setStates}
+              onShuffle={setShuffledPost}
+              updatePostList={setFilteredPosts}/>
+        </div>
 
         <a href={shuffledPost.url}
            onClick={(e) => {
@@ -77,26 +118,9 @@ function App() {
           <h2>{shuffledPost.title}</h2>
         </a>
         
-        <FilterForm
-          values={filters}
-          onChange={handleFilterChanges}/>
-        
-        <br/>
-
-        <CollectButton
-            states={states}
-            posts={collectedPosts}
-            onCollection={setCollectedPosts}
-            onStateChange={setStates}/>
-        
-        <p>When you click collect, the playlist will be loaded and added to local storage. </p>
-        <p>This may take a couple minutes depending on the length of the playlist. </p>
-        <p>Once this process has finished, you can use the shuffle button to load a random video.</p>
-        
         { states?.error.message.length > 0 ? <p>{states.error.message}</p> : <></> }
         
-        { persistedState.postList.length <= 0 ? 
-            <></> : 
+        { persistedState.postList.length <= 0 ? <></> : 
             <VideoList postList={persistedState.postList}/> }
       </div>
     </>

@@ -25,7 +25,7 @@ export default function CollectButton({ states, onStateChange, onCollection }: C
         <>
             { states.status === 'loading' ? 
                 <p>Getting playlist content...</p> : 
-                <button onClick={handleCollection}>Collect Playlist</button> }
+                <button onClick={handleCollection}>Collect</button> }
         </>
     )
 }

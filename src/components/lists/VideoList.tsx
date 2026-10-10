@@ -24,7 +24,10 @@ export default function({postList}: PostListProps) {
                     </li>
                     {listState ? postList.map((post: PostInfo) =>
                         <li>
-                            <p>{post.title}</p>
+                            <a href={post.url} onClick={(e) => {
+                                e.preventDefault();
+                                chrome.tabs.create({ url: post.url });
+                            }}>{post.title}</a>
                         </li>
                         ) : <></>}
                 </ul>

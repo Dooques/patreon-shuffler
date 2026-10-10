@@ -25,13 +25,12 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
   min-width: 320px;
-  min-height: 100vh;
+  //min-height: 100vh;
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 3em;
   line-height: 1.1;
 }
 
@@ -45,6 +44,7 @@ button {
   background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+  margin: 0 1rem;
 }
 button:hover {
   border-color: #646cff;
@@ -65,4 +65,35 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+.buttonContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: auto;
+}
+
+.mediaFilters {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: auto;
+}
+
+label {
+  margin: 0 0.8em;
+}
+
+.instructions {
+  text-align: start;
+}
+
+.filterForm {
+  margin-bottom: 1rem;
+}
+
+.instructionButton {
+  display: inline-block;
+  margin-bottom: 1rem;
 }

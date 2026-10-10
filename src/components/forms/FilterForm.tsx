@@ -5,10 +5,10 @@ export default function FilterForm({values, onChange }: FilterFormProps) {
     return (
         <>
         <form>
-            <h2>Filters</h2>
+            {/*<h2>Filters</h2>*/}
 
-            <div className="filter-form">
-                <div className="media-filters">
+            <div className="filterForm">
+                <div className="mediaFilters">
                     <label>
                         <input 
                             type="radio"
@@ -16,7 +16,7 @@ export default function FilterForm({values, onChange }: FilterFormProps) {
                             value="video"
                             checked = {values.mediaType === 'video'}
                             onChange={() => onChange({...values, mediaType: 'video' })}
-                        />Video
+                        />Video only
                     </label>
 
                     <label>
@@ -26,7 +26,7 @@ export default function FilterForm({values, onChange }: FilterFormProps) {
                             value="audio"
                             checked = {values.mediaType === 'audio'}
                             onChange={() => onChange({...values, mediaType: 'audio'})}
-                        />Audio
+                        />Audio only
                     </label>
                 </div>
             </div>
