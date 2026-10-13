@@ -65,33 +65,31 @@ function App() {
   return (
     <>
       <div>
-        <h1>Patreon Shuffler</h1>
+        <h1>Patreon Shuffler 🔀</h1>
 
+        { showInstructions ?
+            <div>
+              <Instructions/>
+              
+              <button className={"instructionButton"}
+                 onClick={(e) => {
+                   e.preventDefault()
+                   setShowInstructions(!showInstructions)}
+                 }>Hide Instructions</button>
+            </div> :
+            <div>
+              <button className={"instructionButton"}
+                 onClick={(e) => {
+                   e.preventDefault()
+                   setShowInstructions(!showInstructions)}
+                 }>Show Instructions</button>
+            </div>
+        }
+        
         <FilterForm
             values={filters}
             onChange={handleFilterChanges}
         />
-        <div>
-          { showInstructions ? 
-              <div>
-                <Instructions/>
-                <a className={"instructionButton"} 
-                   href={"#"}
-                   onClick={(e) => {
-                     e.preventDefault()
-                     setShowInstructions(!showInstructions)}
-                }>Hide Instructions</a>
-              </div> :
-              <div>
-                <a className={"instructionButton"} 
-                   href={"#"} 
-                   onClick={(e) => {
-                     e.preventDefault()
-                     setShowInstructions(!showInstructions)}
-                }>Show Instructions</a> 
-              </div>
-          }
-        </div>
 
         <div className={"buttonContainer"}>
           <CollectButton
@@ -110,17 +108,24 @@ function App() {
               updatePostList={setFilteredPosts}/>
         </div>
 
-        <a href={shuffledPost.url}
-           onClick={(e) => {
-             e.preventDefault();
-             chrome.tabs.create({ url: shuffledPost.url });
-           }}>
-          <h2>{shuffledPost.title}</h2>
-        </a>
+        {
+          shuffledPost !== DEFAULT_POST ? 
+            <a href={shuffledPost.url}
+               onClick={(e) => {
+                 e.preventDefault();
+                 chrome.tabs.create({ url: shuffledPost.url });
+               }}>
+              <h2>{shuffledPost.title}</h2>
+            </a> : 
+            <></>
+        }
         
-        { states?.error.message.length > 0 ? <p>{states.error.message}</p> : <></> }
+        { states?.error.message.length > 0 ? 
+            <p>{states.error.message}</p> : 
+            <></> }
         
-        { persistedState.postList.length <= 0 ? <></> : 
+        { persistedState.postList.length <= 0 ? 
+            <></> : 
             <VideoList postList={persistedState.postList}/> }
       </div>
     </>
