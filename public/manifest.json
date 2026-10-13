@@ -4,7 +4,11 @@
     "version": "1.0.0",
     "description": "Give your favourite patreon collections new life with this shuffler.",
     "action": {
-      "default_popup": "index.html"
+      "default_popup": "index.html",
+      "default_icon": {
+        "16": "PatreonShufflerIcon.png",
+        "32": "PatreonShufflerIcon.png"
+      }
     },
     "background": {
       "service_worker": "background.js"
@@ -15,5 +19,10 @@
         "matches": ["https://www.patreon.com/*"],
         "js": ["content.js"]
       }
-    ]
+    ],
+    "icons": {
+      "16": "PatreonShufflerIcon.png",
+      "48": "PatreonShufflerIcon.png",
+      "128": "PatreonShufflerIcon.png"
+    },
   }
